@@ -68,6 +68,8 @@ export const getMessages = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// analyse single message and return positivity in them
 export const msg_sentiment = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
@@ -77,10 +79,8 @@ export const msg_sentiment = async (req, res) => {
       participants: { $all: [senderId, userToChatId] },
     }).populate("messages");
 
-    // Extract messages from conversation
     const messages = conversation.messages.map((message) => message.message);
 
-    // Define options for sentiment analysis API
     const options = {
       method: "POST",
       url: "https://sentiment-analysis9.p.rapidapi.com/sentiment",
@@ -97,14 +97,14 @@ export const msg_sentiment = async (req, res) => {
       })),
     };
 
-    // Call sentiment analysis API
     const response = await axios.request(options);
     console.log(response.data);
 
-    // Return sentiment analysis results
     res.status(200).json(response.data);
   } catch (err) {
     console.log("Error in getMessages controller: ", err.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+///
