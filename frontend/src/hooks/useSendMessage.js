@@ -32,10 +32,11 @@ const useSendMessage = () => {
           body: JSON.stringify({ message }),
         }
       )
-      const data2 = await res2.json();
+			const data2 = await res2.json();
+			console.log(data2);
       if (data2.error) throw new Error(data2.error)
       // console.log()
-      setSentiment([...sentiment,data2])
+			setSentiment(data2);
 		} catch (error) {
 			toast.error(error.message);
 		} finally {

@@ -16,7 +16,7 @@ import { app, server } from "./socket/socket.js";
 const __dirname = path.resolve();
 
 dotenv.config();
-const PORT = process.env.PORT;
+const PORT =5000 ||  process.env.PORT;
 
 
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
