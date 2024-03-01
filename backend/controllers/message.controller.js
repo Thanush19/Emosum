@@ -100,13 +100,13 @@ export const msg_sentiment = async (req, res) => {
 
     const response = await axios.request(options);
     console.log(response.data);
-    
+
     // const avgSentimentScore = response.data.map((prediction) => {
     //   const { id, predictions } = prediction;
-      
+
     // })
     let avgSum = 0;
-    for (let i = 0; i < response.data.length; i++){
+    for (let i = 0; i < response.data.length; i++) {
       let SentimentScore = response.data[i].predictions[0].probability;
       avgSum += SentimentScore;
     }
@@ -115,24 +115,26 @@ export const msg_sentiment = async (req, res) => {
     let avgSentimentScore = avgSum / arrlength;
 
     const isExist = await Sentiment.findOne({
-      user_id:senderId
-    })
+      user_id: senderId,
+    });
     let sentimentResponse;
     if (isExist) {
-      sentimentResponse = await Sentiment.updateOne({
-        user_id:senderId
-      }, {
-        score:avgSentimentScore
-      })
+      sentimentResponse = await Sentiment.updateOne(
+        {
+          user_id: senderId,
+        },
+        {
+          score: avgSentimentScore,
+        }
+      );
     } else {
       sentimentResponse = await Sentiment.create({
-      score: avgSentimentScore,
-      msg_id:userToChatId,
-      user_id: senderId,  
-    })
+        score: avgSentimentScore,
+        msg_id: userToChatId,
+        user_id: senderId,
+      });
     }
     console.log(sentimentResponse);
-    
 
     res.status(200).json(response.data);
   } catch (err) {
