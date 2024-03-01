@@ -25,7 +25,8 @@ const Message = ({ message, sentiment }) => {
   } else {
     borderColor = "yellow";
   }
-  //   console.log(borderColor);
+  console.log(borderColor);
+  const border = `border-2 border-${borderColor}-500`;
   return (
     <div className={`chat ${chatClassName}`}>
       <div className="chat-image avatar">
@@ -33,11 +34,16 @@ const Message = ({ message, sentiment }) => {
           <img alt="Tailwind CSS chat bubble component" src={profilePic} />
         </div>
       </div>
-      <div
-        className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2 border-2 border-${borderColor}-500`}
-      >
-        {message.message}
-      </div>
+      {border && (
+        <div
+          className={`chat-bubble text-white  ${shakeClass} pb-2`}
+          style={{
+            backgroundColor: `${borderColor}`,
+          }}
+        >
+          {message.message}
+        </div>
+      )}
       <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">
         {formattedTime}
       </div>

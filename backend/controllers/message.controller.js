@@ -2,6 +2,7 @@ import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
 import axios from "axios";
+import Sentiment from "../models/sentiment.model.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -99,6 +100,39 @@ export const msg_sentiment = async (req, res) => {
 
     const response = await axios.request(options);
     console.log(response.data);
+    
+    // const avgSentimentScore = response.data.map((prediction) => {
+    //   const { id, predictions } = prediction;
+      
+    // })
+    let avgSum = 0;
+    for (let i = 0; i < response.data.length; i++){
+      let SentimentScore = response.data[i].predictions[0].probability;
+      avgSum += SentimentScore;
+    }
+    // avgSentimentScore = avgSentimentScore / response.data.length - 1;
+    let arrlength = response.data.length - 1;
+    let avgSentimentScore = avgSum / arrlength;
+
+    const isExist = await Sentiment.findOne({
+      user_id:senderId
+    })
+    let sentimentResponse;
+    if (isExist) {
+      sentimentResponse = await Sentiment.updateOne({
+        user_id:senderId
+      }, {
+        score:avgSentimentScore
+      })
+    } else {
+      sentimentResponse = await Sentiment.create({
+      score: avgSentimentScore,
+      msg_id:userToChatId,
+      user_id: senderId,  
+    })
+    }
+    console.log(sentimentResponse);
+    
 
     res.status(200).json(response.data);
   } catch (err) {
