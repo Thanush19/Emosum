@@ -3,6 +3,7 @@ import Message from "../models/message.model.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
 import axios from "axios";
 import Sentiment from "../models/sentiment.model.js";
+import Keyword from "../models/keyword.model.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -42,6 +43,45 @@ export const sendMessage = async (req, res) => {
       // io.to(<socket_id>).emit() used to send events to specific client
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
+
+    //   const response = await axios.post(
+    //   "https://api.edenai.run/v2/text/keyword_extraction",
+    //   {
+    //     providers: "microsoft, amazon",
+    //     text: message,
+    //     language: "en",
+    //     fallback_providers: "",
+    //   },
+    //   {
+    //     headers: {
+    //       authorization:
+    //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYmMzNmYyYzEtOTlhYy00MTI1LWEyYWEtN2I0MWUyNjQ3MzM3IiwidHlwZSI6ImFwaV90b2tlbiJ9.pX6C9IyvIYnpy6SSwbcA7m5ozegYLFhAvknq_OVTb0w",
+    //     },
+    //   }
+    // );
+
+    // console.log(response)
+
+    //  const isExist = await Keyword.findOne({
+    //   user_id:senderId
+    //  })
+
+    //  let keyWordResponse;
+    // if (isExist) {
+    //   const keywordArray = isExist.keywords;
+    //   const newKeywordArray = [...keywordArray,...response.data.keywords]
+    //   keyWordResponse = await Keyword.updateOne({
+    //     senderId:senderId
+    //   }, {
+    //     keywords:newKeywordArray
+    //   })
+    // } else {
+    //   keyWordResponse = await Keyword.create({
+    //     senderId: senderId,
+    //     keywords:[...response.data.keywords]
+    // })
+    // }
+    // console.log(keyWordResponse);
 
     res.status(201).json(newMessage);
   } catch (error) {
@@ -88,7 +128,7 @@ export const msg_sentiment = async (req, res) => {
       headers: {
         "content-type": "application/json",
         Accept: "application/json",
-        "X-RapidAPI-Key": "b65354c2edmsh784f0298ff419c3p113eebjsncdfd0326168d",
+        "X-RapidAPI-Key": "85db4b9ba3msh71e28a9c6d70ec5p11c017jsn5eac953573d7",
         "X-RapidAPI-Host": "sentiment-analysis9.p.rapidapi.com",
       },
       data: messages.map((message, index) => ({
@@ -101,10 +141,6 @@ export const msg_sentiment = async (req, res) => {
     const response = await axios.request(options);
     console.log(response.data);
 
-    // const avgSentimentScore = response.data.map((prediction) => {
-    //   const { id, predictions } = prediction;
-
-    // })
     let avgSum = 0;
     for (let i = 0; i < response.data.length; i++) {
       let SentimentScore = response.data[i].predictions[0].probability;
