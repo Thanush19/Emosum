@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "assemblyai": "^4.3.1",
+    "axios": "^1.6.7",
     "chat-app-yt": "file:..",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

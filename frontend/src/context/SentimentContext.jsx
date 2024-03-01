@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export const SentimentContext = createContext();
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useSentimentContext = () => {
   return useContext(SentimentContext);
 };
