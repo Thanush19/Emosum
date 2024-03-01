@@ -1,43 +1,85 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  Tooltip,
+} from "recharts";
 
 const DashBoard = () => {
-  const [score, setScore] = useState(null);
-  const [authUser, setAuthUser] = useState(
-    JSON.parse(localStorage.getItem("chat-user")) || null
-  );
-  const user_id = authUser ? authUser._id : null;
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const getSentimentScore = async () => {
-      try {
-        if (user_id) {
-          const response = await axios.get(`/api/sentiment-score/${user_id}`);
-          setScore(response.data);
-        }
-      } catch (err) {
-        toast.error(err.message);
+  // Mock data
+  const sentimentsData = [
+    { date: "2024-03-01", sentiment: "positive" },
+    { date: "2024-03-01", sentiment: "positive" },
+    { date: "2024-03-01", sentiment: "negative" },
+    { date: "2024-03-02", sentiment: "positive" },
+    { date: "2024-03-02", sentiment: "negative" },
+    { date: "2024-03-03", sentiment: "negative" },
+  ];
+
+  const formatDataForChart = () => {
+    const groupedData = sentimentsData.reduce((acc, curr) => {
+      const date = curr.date;
+      if (acc[date]) {
+        acc[date][curr.sentiment]++;
+      } else {
+        acc[date] = { positive: 0, negative: 0 };
+        acc[date][curr.sentiment]++;
       }
-    };
+      return acc;
+    }, {});
 
-    getSentimentScore(); // Call the function when the component mounts or when user_id changes
-  }, [user_id]);
+    const dates = Object.keys(groupedData);
+    const chartData = dates.map((date) => {
+      return {
+        date: date,
+        positive: groupedData[date].positive,
+        negative: groupedData[date].negative,
+      };
+    });
+
+    return chartData;
+  };
+
+  const chartData = formatDataForChart();
+
+  const handleGoBack = () => {
+    navigate(-1); // Navigate back
+  };
 
   return (
     <div>
-      <p>Sentiment Score:</p>
-      {score ? (
-        <ul>
-          {score.map((item) => (
-            <li key={item.id}>
-              Probability: {item.predictions[0].probability}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <div className="">
+        <h2
+          style={{ color: "white" }}
+          className="top-[10vh]mt-[10vh] text-center uppercase text-2xl font-bold underline-offset-0 mb-10 "
+        >
+          Sentiments per day
+        </h2>
+        <div style={{ width: 600, height: 400 }}>
+          <BarChart width={600} height={400} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="positive" stackId="a" fill="#FFD700" />
+            <Bar dataKey="negative" stackId="a" fill="#00FFFF" />
+          </BarChart>
+        </div>
+      </div>
+      <button
+        className="bg-gray-300 w-25  p-2 rounded-xl"
+        onClick={handleGoBack}
+      >
+        Go Back
+      </button>
     </div>
   );
 };
