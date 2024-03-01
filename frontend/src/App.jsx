@@ -6,7 +6,8 @@ import SignUp from "./pages/signup/SignUp";
 import { Toaster } from "react-hot-toast";
 import { useAuthContext } from "./context/AuthContext";
 import Dashboard from "./components/dashboard/Dashboard";
-import Audio from "./components/audio/Audio";
+import AudioAnalysis from "./components/audio-analysis/AudioAnalysis";
+// import Audio from "./components/audio/Audio";
 
 function App() {
   const { authUser } = useAuthContext();
@@ -31,7 +32,7 @@ function App() {
         />
         <Route
           path="/audio-analysis"
-          element={authUser ? <Audio /> : <SignUp />}
+          element={authUser ? <AudioAnalysis /> : <SignUp />}
         />
       </Routes>
       <Toaster />
