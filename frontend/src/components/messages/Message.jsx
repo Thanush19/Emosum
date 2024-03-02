@@ -94,7 +94,6 @@ const Message = ({ message, sentiment }) => {
       <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">
         {formattedTime}
       </div>
-      {/* Modal for displaying the summary */}
       <Modal
         isOpen={summary !== null}
         onRequestClose={() => setSummary(null)}

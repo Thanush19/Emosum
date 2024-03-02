@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 const API_KEY_NLP = "AIzaSyBMX_ZaUPUUE5wqUDZ-UId0PSsnw94aoHU";
 const API_KEY_ASSEMBLYAI = "2a91e62981a84432be2b19486ee4bdf9";
-
 const AudioAnalysis = () => {
   const [transcript, setTranscript] = useState("");
   const [chivalryScore, setChivalryScore] = useState(0);
@@ -85,21 +84,28 @@ const AudioAnalysis = () => {
         }
       });
   };
+  const getEmoji = () => {
+    if (chivalryScore > 0.25) {
+      return "😊"; // Positive emoji
+    } else if (chivalryScore < -0.25) {
+      return "😔"; // Negative emoji
+    } else {
+      return "😐"; // Neutral emoji
+    }
+  };
 
   const AnalyzeSentiment = () => {
     let textToProcess = document.getElementById("transcript").value;
     const data = {
       document: {
-        type: 1,
-        language: "en",
+        type: "PLAIN_TEXT",
         content: textToProcess,
       },
-      encodingType: 1,
+      encodingType: "UTF8",
     };
 
     fetch(
-      "https://language.googleapis.com/v1beta2/documents:analyzeSentiment?key=" +
-        API_KEY_NLP,
+      `https://language.googleapis.com/v1/documents:analyzeSentiment?key=${API_KEY_NLP}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -107,26 +113,30 @@ const AudioAnalysis = () => {
       }
     )
       .then((res) => res.json())
-      .then((dataArray) => {
-        if (dataArray.length > 0) {
-          const firstItem = dataArray[0];
-          if (firstItem.predictions && firstItem.predictions.length > 0) {
-            const { prediction, probability } = firstItem.predictions[0];
-            setPrediction(prediction);
-            setProbability(probability);
+      .then((response) => {
+        const sentiment = response.documentSentiment;
+        if (sentiment) {
+          const score = sentiment.score;
+          // Determine sentiment based on score
+          let sentimentLabel;
+          if (score > 0.25) {
+            sentimentLabel = "Positive";
+          } else if (score < -0.25) {
+            sentimentLabel = "Negative";
           } else {
-            setPrediction("No prediction available");
-            setProbability(null);
+            sentimentLabel = "Neutral";
           }
-        } else {
-          setPrediction("No data available");
-          setProbability(null);
+          // Update state with sentiment result
+          setMessage(`Sentiment: ${sentimentLabel}`);
+          setChivalryScore(score);
+          setMessageColor("text-green-700"); // Assuming positive sentiment color
         }
       })
       .catch((error) => {
         console.error("Error analyzing sentiment:", error);
-        setPrediction("Error occurred");
-        setProbability(null);
+        setMessage("Error occurred");
+        setChivalryScore(0);
+        setMessageColor("text-red-700");
       });
   };
 
@@ -139,10 +149,7 @@ const AudioAnalysis = () => {
         Politeness meter: {chivalryScore}
       </div>
       <div id="ChivalryMessage" className={`mb-4 ${messageColor}`}>
-        {message}
-      </div>
-      <div id="prediction" className="mb-4">
-        Prediction: {prediction}, Probability: {probability}
+        {message} {getEmoji()} {/* Render emoji based on sentiment */}
       </div>
       <textarea
         id="transcript"
