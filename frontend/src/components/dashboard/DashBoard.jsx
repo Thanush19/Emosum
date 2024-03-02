@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -20,7 +20,7 @@ const DashBoard = () => {
     { date: "2024-03-01", sentiment: "negative" },
     { date: "2024-03-02", sentiment: "positive" },
     { date: "2024-03-02", sentiment: "negative" },
-    { date: "2024-03-03", sentiment: "negative" },
+    { date: "2024-03-02", sentiment: "negative" },
   ];
 
   const formatDataForChart = () => {
@@ -55,6 +55,9 @@ const DashBoard = () => {
 
   return (
     <div>
+      <button className="bg-white">
+        <Link to="/audio-analysis">Audio Analysis</Link>
+      </button>
       <div className="">
         <h2
           style={{ color: "white" }}
@@ -69,8 +72,8 @@ const DashBoard = () => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="positive" stackId="a" fill="#FFD700" />
-            <Bar dataKey="negative" stackId="a" fill="#00FFFF" />
+            <Bar dataKey="positive" stackId="a" fill="#00FF00" />
+            <Bar dataKey="negative" stackId="a" fill="#FF0000" />
           </BarChart>
         </div>
       </div>

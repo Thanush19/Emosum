@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const API_KEY_NLP = "AIzaSyBMX_ZaUPUUE5wqUDZ-UId0PSsnw94aoHU";
 const API_KEY_ASSEMBLYAI = "2a91e62981a84432be2b19486ee4bdf9";
@@ -9,7 +10,10 @@ const AudioAnalysis = () => {
   const [messageColor, setMessageColor] = useState("");
   const [prediction, setPrediction] = useState("");
   const [probability, setProbability] = useState(null);
-
+  const navigate = useNavigate();
+  const handleGoBack = () => {
+    navigate(-1); // Navigate back
+  };
   const fileValidation = () => {
     const fileInput = document.getElementById("file");
     const { name: fileName, size } = fileInput.files[0];
@@ -142,6 +146,12 @@ const AudioAnalysis = () => {
 
   return (
     <>
+      <button
+        className="bg-black w-25 mb-[90vh] text-white  p-2 rounded-xl"
+        onClick={handleGoBack}
+      >
+        Go Back
+      </button>
       <div className="max-w-2xl mx-auto mt-8 p-6 bg-gray-100 rounded-lg shadow-lg">
         <input
           type="file"
