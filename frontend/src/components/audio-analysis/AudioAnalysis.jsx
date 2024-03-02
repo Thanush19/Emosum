@@ -8,6 +8,8 @@ const AudioAnalysis = () => {
   const [chivalryScore, setChivalryScore] = useState(0);
   const [message, setMessage] = useState("");
   const [messageColor, setMessageColor] = useState("");
+  const [prediction, setPrediction] = useState("");
+  const [probability, setProbability] = useState(null);
 
   const fileValidation = () => {
     const fileInput = document.getElementById("file");
@@ -105,51 +107,55 @@ const AudioAnalysis = () => {
       }
     )
       .then((res) => res.json())
-      .then((data) => {
-        let analysis = "";
-        for (let i = 0; i < data.sentences.length; i++) {
-          analysis +=
-            data.sentences[i].text.content +
-            "\n\tSentiment: " +
-            data.sentences[i].sentiment.score +
-            "\n";
-        }
-
-        document.getElementById("AudioAnalysis").innerHTML = analysis;
-        let chivalryScore = parseInt(
-          (data.documentSentiment.score *
-            data.documentSentiment.magnitude *
-            100) |
-            0
-        );
-        setChivalryScore(chivalryScore);
-
-        if (chivalryScore >= 0) {
-          setMessage("How chivalrous of you!");
-          setMessageColor("rgb(152, 255, 152)");
+      .then((dataArray) => {
+        if (dataArray.length > 0) {
+          const firstItem = dataArray[0];
+          if (firstItem.predictions && firstItem.predictions.length > 0) {
+            const { prediction, probability } = firstItem.predictions[0];
+            setPrediction(prediction);
+            setProbability(probability);
+          } else {
+            setPrediction("No prediction available");
+            setProbability(null);
+          }
         } else {
-          setMessage("An honorable knight should not behave in such a way!");
-          setMessageColor("rgb(255, 56, 0)");
+          setPrediction("No data available");
+          setProbability(null);
         }
+      })
+      .catch((error) => {
+        console.error("Error analyzing sentiment:", error);
+        setPrediction("Error occurred");
+        setProbability(null);
       });
   };
 
   return (
-    <div>
-      <input type="file" id="file" onChange={fileValidation} />
-      <div className="file-name" style={{ display: "none" }}></div>
-      <div id="TranscriptLoading" style={{ display: "none" }}></div>
-      <div id="AudioAnalysis"></div>
-      <div id="main-sentiment-output">Chivalry Score: {chivalryScore}</div>
-      <div id="ChivalryMessage" style={{ color: messageColor }}>
+    <div className="max-w-2xl mx-auto mt-8 p-6 bg-gray-100 rounded-lg shadow-lg">
+      <input type="file" id="file" className="mb-4" onChange={fileValidation} />
+      <div className="file-name hidden"></div>
+      <div id="TranscriptLoading" className="hidden"></div>
+      <div id="main-sentiment-output" className="mb-4">
+        Politeness meter: {chivalryScore}
+      </div>
+      <div id="ChivalryMessage" className={`mb-4 ${messageColor}`}>
         {message}
+      </div>
+      <div id="prediction" className="mb-4">
+        Prediction: {prediction}, Probability: {probability}
       </div>
       <textarea
         id="transcript"
         value={transcript}
         onChange={(e) => setTranscript(e.target.value)}
+        className="w-full h-32 mb-4 p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
       ></textarea>
-      <button onClick={AnalyzeSentiment}>Analyze Sentiment</button>
+      <button
+        onClick={AnalyzeSentiment}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Analyze Sentiment
+      </button>
     </div>
   );
 };
