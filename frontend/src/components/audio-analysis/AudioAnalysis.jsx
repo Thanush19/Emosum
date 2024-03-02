@@ -141,29 +141,36 @@ const AudioAnalysis = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-6 bg-gray-100 rounded-lg shadow-lg">
-      <input type="file" id="file" className="mb-4" onChange={fileValidation} />
-      <div className="file-name hidden"></div>
-      <div id="TranscriptLoading" className="hidden"></div>
-      <div id="main-sentiment-output" className="mb-4">
-        Politeness meter: {chivalryScore}
+    <>
+      <div className="max-w-2xl mx-auto mt-8 p-6 bg-gray-100 rounded-lg shadow-lg">
+        <input
+          type="file"
+          id="file"
+          className="mb-4"
+          onChange={fileValidation}
+        />
+        <div className="file-name hidden"></div>
+        <div id="TranscriptLoading" className="hidden"></div>
+        <div id="main-sentiment-output" className="mb-4">
+          Politeness meter: {chivalryScore}
+        </div>
+        <div id="ChivalryMessage" className={`mb-4 ${messageColor}`}>
+          {message} {getEmoji()} {/* Render emoji based on sentiment */}
+        </div>
+        <textarea
+          id="transcript"
+          value={transcript}
+          onChange={(e) => setTranscript(e.target.value)}
+          className="w-full h-32 mb-4 p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
+        ></textarea>
+        <button
+          onClick={AnalyzeSentiment}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Analyze Sentiment
+        </button>
       </div>
-      <div id="ChivalryMessage" className={`mb-4 ${messageColor}`}>
-        {message} {getEmoji()} {/* Render emoji based on sentiment */}
-      </div>
-      <textarea
-        id="transcript"
-        value={transcript}
-        onChange={(e) => setTranscript(e.target.value)}
-        className="w-full h-32 mb-4 p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
-      ></textarea>
-      <button
-        onClick={AnalyzeSentiment}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Analyze Sentiment
-      </button>
-    </div>
+    </>
   );
 };
 
