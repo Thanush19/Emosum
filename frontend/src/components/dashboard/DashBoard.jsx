@@ -55,8 +55,10 @@ const DashBoard = () => {
 
   return (
     <div>
-      <button className="bg-white">
-        <Link to="/audio-analysis">Audio Analysis</Link>
+      <button className="bg-white rounded-xl">
+        <Link to="/audio-analysis" className="p-2 text-black font-bold ">
+          Audio Analysis
+        </Link>
       </button>
       <div className="">
         <h2

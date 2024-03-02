@@ -12,7 +12,7 @@ const AudioAnalysis = () => {
   const [probability, setProbability] = useState(null);
   const navigate = useNavigate();
   const handleGoBack = () => {
-    navigate(-1); // Navigate back
+    navigate(-1);
   };
   const fileValidation = () => {
     const fileInput = document.getElementById("file");
@@ -145,13 +145,21 @@ const AudioAnalysis = () => {
   };
 
   return (
-    <>
-      <button
-        className="bg-black w-25 mb-[90vh] text-white  p-2 rounded-xl"
-        onClick={handleGoBack}
-      >
-        Go Back
-      </button>
+    <div className="flex flex-col">
+      <div className="">
+        <button
+          className="bg-black w-25 mb-10 text-white  p-2 rounded-xl"
+          onClick={handleGoBack}
+        >
+          Go Back
+        </button>
+      </div>
+      <div>
+        <h1 className="underline uppercase font-bold text-3xl">
+          Audio Sentiment Analysis
+        </h1>
+      </div>
+
       <div className="max-w-2xl mx-auto mt-8 p-6 bg-gray-100 rounded-lg shadow-lg">
         <input
           type="file"
@@ -180,7 +188,7 @@ const AudioAnalysis = () => {
           Analyze Sentiment
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
