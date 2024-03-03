@@ -20,7 +20,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1",
     "react-mic": "^12.4.6",
-    "socket.io": "^4.7.4"
+    "socket.io": "^4.7.4",
+    "translate-google": "^1.5.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"

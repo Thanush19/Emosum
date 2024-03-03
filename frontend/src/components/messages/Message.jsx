@@ -13,6 +13,7 @@ const Message = ({ message, sentiment }) => {
   const { selectedConversation } = useConversation();
   const [summary, setSummary] = useState(null); // State to store the summary
   const [loading, setLoading] = useState(false); // State for loading state
+  const [translation, setTranslation] = useState(null); // State for translated message
   const fromMe = message.senderId === authUser._id;
   const formattedTime = extractTime(message.createdAt);
   const chatClassName = fromMe ? "chat-end" : "chat-start";
@@ -61,6 +62,40 @@ const Message = ({ message, sentiment }) => {
     }
   };
 
+  const translateMessage = async (textToTranslate) => {
+    try {
+      const encodedParams = new URLSearchParams();
+      encodedParams.set("source_language", "en");
+      encodedParams.set("target_language", "id");
+      encodedParams.set("text", textToTranslate);
+
+      const options = {
+        method: "POST",
+        url: "https://text-translator2.p.rapidapi.com/translate",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          "X-RapidAPI-Key":
+            "b65354c2edmsh784f0298ff419c3p113eebjsncdfd0326168d",
+          "X-RapidAPI-Host": "text-translator2.p.rapidapi.com",
+        },
+        data: encodedParams,
+      };
+
+      const response = await axios.request(options);
+      return response.data.text;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const handleClickTranslate = async () => {
+    setLoading(true);
+    const translatedMessage = await translateMessage(message.message);
+    setTranslation(translatedMessage);
+    setLoading(false);
+  };
+
   useEffect(() => {
     // Reset summary state when message changes
     setSummary(null);
@@ -78,7 +113,7 @@ const Message = ({ message, sentiment }) => {
           className={`chat-bubble text-white  ${shakeClass} pb-2`}
           style={{ backgroundColor: `${borderColor}` }}
         >
-          <div>{message.message}</div>
+          <div>{translation ? translation : message.message}</div>
           {message.message.split(" ").length > 30 && !summary && (
             <button
               className="m-2 bg-white text-black rounded-xl font-bold p-2"
@@ -88,6 +123,13 @@ const Message = ({ message, sentiment }) => {
               {loading ? "Loading..." : "Get Summary"}
             </button>
           )}
+          {/* <button
+            className="m-2 bg-white text-black rounded-xl font-bold p-2"
+            onClick={handleClickTranslate}
+            disabled={loading || translation} // Disable button if already translated or loading
+          >
+            {/* {loading ? "Translating..." : "Translate"} */}
+          {/* </button> */}
         </div>
       )}
 
