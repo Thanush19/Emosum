@@ -8,7 +8,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://emosum-frontend.vercel.app/"],
+    origin: [
+      "https://emosum-backend.onrender.com/",
+      "https://emosum-frontend.vercel.app/",
+    ],
     methods: ["GET", "POST"],
   },
 });
