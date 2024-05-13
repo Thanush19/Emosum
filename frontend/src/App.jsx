@@ -5,7 +5,7 @@ import Login from "./pages/login/Login";
 import SignUp from "./pages/signup/SignUp";
 import { Toaster } from "react-hot-toast";
 import { useAuthContext } from "./context/AuthContext";
-import Dashboard from "./components/dashboard/Dashboard";
+import Dashboard from "./components/dashboard/DashBoard";
 import AudioAnalysis from "./components/audio-analysis/AudioAnalysis";
 // import Audio from "./components/audio/Audio";
 
