@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://emosum-frontend.vercel.app"],
+    origin: ["http://localhost:3000", "https://emosum-frontend.vercel.app/"],
     methods: ["GET", "POST"],
   },
 });
@@ -18,7 +18,7 @@ export const getReceiverSocketId = (receiverId) => {
   return userSocketMap[receiverId];
 };
 
-const userSocketMap = {}; // {userId: socketId}
+const userSocketMap = {};
 
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
