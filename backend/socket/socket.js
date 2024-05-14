@@ -11,6 +11,7 @@ const io = new Server(server, {
     origin: [
       "https://emosum-backend.onrender.com/",
       "https://emosum-frontend.vercel.app/",
+      "http://localhost:3000/",
     ],
     methods: ["GET", "POST"],
   },
